@@ -1,18 +1,16 @@
 import { type NextPage } from "next";
 import Head from "next/head";
 import { useEffect, useState, type ChangeEvent } from "react";
+import { trpc } from "../utils/trpc";
 
 const Home: NextPage = () => {
   const [term, updateTerm] = useState("");
-  const [books, updateBooks] = useState([]);
+  const { data: events, mutate: searchEvents } =
+    trpc.events.search.useMutation();
 
   useEffect(() => {
-    fetch("/api/events?search=" + term)
-      .then((res) => res.json())
-      .then((books) => {
-        updateBooks(books);
-      });
-  }, [term]);
+    searchEvents({ term });
+  }, [term, searchEvents]);
 
   const onSearch = async (e: ChangeEvent<HTMLInputElement>) => {
     e.preventDefault();
@@ -40,13 +38,13 @@ const Home: NextPage = () => {
             placeholder="Search for an event"
           />
           <ul className="w-full">
-            {books?.map((book) => (
+            {events?.map((event) => (
               <>
                 <li
                   className="my-2 rounded border p-5 font-medium text-white"
-                  key={book.id}
+                  key={event.id}
                 >
-                  {book.title}
+                  {event.title}
                 </li>
               </>
             ))}

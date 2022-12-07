@@ -1,8 +1,8 @@
 import { router } from "../trpc";
-import { bookRouter } from "./eventRouter";
+import { eventRouter } from "./eventRouter";
 
 export const appRouter = router({
-  books: bookRouter,
+  events: eventRouter,
 });
 
 // export type definition of API
